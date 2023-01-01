@@ -8,6 +8,7 @@ import org.bukkit.plugin.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.StringReader;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -33,7 +34,12 @@ public final class RustPluginLoader implements PluginLoader {
 
     @Override
     public PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException {
-        return new PluginDescriptionFile(file.getName(), "unknown", "rust");
+        return new PluginDescriptionFile(new StringReader("""
+                name: %s
+                main: Rust
+                version: unknown
+                author: unknown
+                """.formatted(file.getName())));
     }
 
     private static final Pattern[] EXTENSIONS = new Pattern[] { Pattern.compile("\\.dll$") };

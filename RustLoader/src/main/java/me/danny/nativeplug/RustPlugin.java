@@ -13,6 +13,7 @@ import org.bukkit.plugin.PluginLoader;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -39,7 +40,17 @@ public class RustPlugin implements Plugin {
 
     @Override
     public PluginDescriptionFile getDescription() {
-        return new PluginDescriptionFile(lib.getName(), "unknown", "rust");
+        try {
+            return new PluginDescriptionFile(new StringReader("""
+                    name: %s
+                    main: Rust
+                    version: unknown
+                    author: unknown
+                    """.formatted(getName())));
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return new PluginDescriptionFile(getName(), "unknown", "rust");
+        }
     }
 
     @Override
