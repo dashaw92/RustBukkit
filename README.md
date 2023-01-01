@@ -1,0 +1,1 @@
+Heavily inspired by [NativeBukkit](https://github.com/jarcode-foss/NativeBukkit)

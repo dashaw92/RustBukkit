@@ -1,0 +1,13 @@
+name: RustLoader
+main: me.danny.nativeplug.RustLoader
+version: 0.0.1
+author: Danny
+api-version: 1.19
+load: STARTUP
+description: Loads native plugins written in Rust
+website: https://github.com/dashaw92/RustBukkit
+commands:
+  nativequery:
+    usage: /<command>
+    default: op
+    description: Query the native loader for info
