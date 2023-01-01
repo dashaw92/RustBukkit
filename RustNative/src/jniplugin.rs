@@ -1,16 +1,37 @@
-use dlopen::wrapper::{Container, WrapperApi};
-
 use jni::{
     objects::{JClass, JObject, JString, JValue},
     sys::jlong,
     JNIEnv,
 };
+use libloading::{Library, Symbol};
 
-#[derive(WrapperApi)]
-struct Api {
-    onload: fn(),
-    onenable: fn(),
-    ondisable: fn(),
+struct Plug {
+    lib: Library,
+}
+
+impl Plug {
+    fn call(&self, name: &[u8]) -> Result<(), libloading::Error> {
+        let symbol: Result<Symbol<fn()>, _> = unsafe { self.lib.get(name) };
+        match symbol {
+            Ok(fp) => {
+                fp();
+                Ok(())
+            }
+            Err(e) => Err(e),
+        }
+    }
+
+    fn onload(&self) -> Result<(), libloading::Error> {
+        self.call(b"onload")
+    }
+
+    fn onenable(&self) -> Result<(), libloading::Error> {
+        self.call(b"onenable")
+    }
+
+    fn ondisable(&self) -> Result<(), libloading::Error> {
+        self.call(b"ondisable")
+    }
 }
 
 #[no_mangle]
@@ -27,13 +48,15 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_open(
         }
     };
 
-    println!(
-        "\n... got path to native plugin '{}', attempting to load.",
-        &path
-    );
-    let plug: Box<Container<Api>> =
-        Box::new(unsafe { Container::load(path) }.expect("Failed to load plugin library!"));
+    let lib = match unsafe { Library::new(&path) } {
+        Ok(lib) => lib,
+        Err(e) => {
+            eprintln!("Failed to load library '{path}'\n{e}");
+            panic!();
+        }
+    };
 
+    let plug = Box::new(Plug { lib });
     Box::into_raw(plug) as *const i64 as jlong
 }
 
@@ -46,27 +69,33 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_close(env: JNIEnv, this: JO
 #[no_mangle]
 pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onLoad(env: JNIEnv, this: JObject) {
     let api = get_api(&env, &this);
-    api.onload();
+    if let Err(e) = api.onload() {
+        eprintln!("error in onload: {e}");
+    }
 }
 
 #[no_mangle]
 pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onEnable(env: JNIEnv, this: JObject) {
     let api = get_api(&env, &this);
-    api.onenable();
+    if let Err(e) = api.onenable() {
+        eprintln!("error in onenable {e}");
+    }
 }
 
 #[no_mangle]
 pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onDisable(env: JNIEnv, this: JObject) {
     let api = get_api(&env, &this);
-    api.ondisable();
+    if let Err(e) = api.ondisable() {
+        eprintln!("error in ondisable {e}");
+    }
 }
 
-fn get_api(env: &JNIEnv, this: &JObject) -> Box<Container<Api>> {
+fn get_api(env: &JNIEnv, this: &JObject) -> Box<Plug> {
     let JValue::Long(handle) = env
         .get_field(*this, "handle", "J")
         .expect("Failed to read ptr from instance!") else {
             panic!("Handle is not a long!");
         };
 
-    unsafe { Box::from_raw(handle as *const i64 as *mut Container<Api>) }
+    unsafe { Box::from_raw(handle as *const i64 as *mut Plug) }
 }
