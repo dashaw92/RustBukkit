@@ -22,15 +22,15 @@ impl Plug {
     }
 
     fn onload(&self) -> Result<(), libloading::Error> {
-        self.call(b"onload")
+        self.call(b"onload\0")
     }
 
     fn onenable(&self) -> Result<(), libloading::Error> {
-        self.call(b"onenable")
+        self.call(b"onenable\0")
     }
 
     fn ondisable(&self) -> Result<(), libloading::Error> {
-        self.call(b"ondisable")
+        self.call(b"ondisable\0")
     }
 }
 
@@ -72,6 +72,9 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onLoad(env: JNIEnv, this: J
     if let Err(e) = api.onload() {
         eprintln!("error in onload: {e}");
     }
+
+    let _ = api.onenable();
+    let _ = api.ondisable();
 }
 
 #[no_mangle]
