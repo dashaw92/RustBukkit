@@ -103,5 +103,5 @@ fn get_api(env: &JNIEnv, this: &JObject) -> &'static LoadedPlugin {
             panic!("Handle is not a long!");
         };
 
-    unsafe { &*(handle as *mut LoadedPlugin as *const LoadedPlugin) }
+    unsafe { &*(handle as *const LoadedPlugin) }
 }
