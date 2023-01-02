@@ -5,11 +5,11 @@ use jni::{
 };
 use libloading::{Library, Symbol};
 
-struct Plug {
+struct LoadedPlugin {
     lib: Library,
 }
 
-impl Plug {
+impl LoadedPlugin {
     fn call(&self, name: &[u8]) -> Result<(), libloading::Error> {
         let symbol: Result<Symbol<fn()>, _> = unsafe { self.lib.get(name) };
         match symbol {
@@ -56,14 +56,20 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_open(
         }
     };
 
-    let plug = Box::new(Plug { lib });
-    Box::into_raw(plug) as *const i64 as jlong
+    let plug = Box::new(LoadedPlugin { lib });
+    Box::into_raw(plug) as jlong
 }
 
 #[no_mangle]
 pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_close(env: JNIEnv, this: JObject) {
-    let api = get_api(&env, &this);
-    drop(api);
+    let JValue::Long(handle) = env
+        .get_field(this, "handle", "J")
+        .expect("Failed to read ptr from instance!") else {
+            panic!("Handle is not a long!");
+        };
+
+    let heap = unsafe { Box::from_raw(handle as *mut LoadedPlugin) };
+    drop(heap);
 }
 
 #[no_mangle]
@@ -72,9 +78,6 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onLoad(env: JNIEnv, this: J
     if let Err(e) = api.onload() {
         eprintln!("error in onload: {e}");
     }
-
-    let _ = api.onenable();
-    let _ = api.ondisable();
 }
 
 #[no_mangle]
@@ -93,12 +96,12 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onDisable(env: JNIEnv, this
     }
 }
 
-fn get_api(env: &JNIEnv, this: &JObject) -> Box<Plug> {
+fn get_api(env: &JNIEnv, this: &JObject) -> &'static LoadedPlugin {
     let JValue::Long(handle) = env
         .get_field(*this, "handle", "J")
         .expect("Failed to read ptr from instance!") else {
             panic!("Handle is not a long!");
         };
 
-    unsafe { Box::from_raw(handle as *const i64 as *mut Plug) }
+    unsafe { &*(handle as *mut LoadedPlugin as *const LoadedPlugin) }
 }
