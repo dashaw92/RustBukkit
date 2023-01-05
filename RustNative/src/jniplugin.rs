@@ -5,35 +5,35 @@ use jni::{
 };
 use libloading::{Library, Symbol};
 
-use crate::bukkit::{Bukkit, BukkitImpl};
+use crate::bukkit::Bukkit;
 
 struct LoadedPlugin {
     lib: Library,
 }
 
-type PluginHook = fn(&dyn Bukkit);
+type PluginHook = fn(&Bukkit);
 
 impl LoadedPlugin {
-    fn call(&self, name: &[u8], bukkit: impl Bukkit) -> Result<(), libloading::Error> {
+    fn call(&self, name: &[u8], bukkit: &Bukkit) -> Result<(), libloading::Error> {
         let symbol: Result<Symbol<PluginHook>, _> = unsafe { self.lib.get(name) };
         match symbol {
             Ok(fp) => {
-                fp(&bukkit);
+                fp(bukkit);
                 Ok(())
             }
             Err(e) => Err(e),
         }
     }
 
-    fn onload(&self, bukkit: impl Bukkit) -> Result<(), libloading::Error> {
+    fn onload(&self, bukkit: &Bukkit) -> Result<(), libloading::Error> {
         self.call(b"onload\0", bukkit)
     }
 
-    fn onenable(&self, bukkit: impl Bukkit) -> Result<(), libloading::Error> {
+    fn onenable(&self, bukkit: &Bukkit) -> Result<(), libloading::Error> {
         self.call(b"onenable\0", bukkit)
     }
 
-    fn ondisable(&self, bukkit: impl Bukkit) -> Result<(), libloading::Error> {
+    fn ondisable(&self, bukkit: &Bukkit) -> Result<(), libloading::Error> {
         self.call(b"ondisable\0", bukkit)
     }
 }
@@ -80,8 +80,8 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_close(env: JNIEnv, this: JO
 pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onLoad(env: JNIEnv, this: JObject) {
     let api = get_api(&env, &this);
 
-    let bukkit = BukkitImpl { env: &env };
-    if let Err(e) = api.onload(bukkit) {
+    let bukkit = Bukkit { env: &env };
+    if let Err(e) = api.onload(&bukkit) {
         eprintln!("error in onload: {e}");
     }
 }
@@ -90,8 +90,8 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onLoad(env: JNIEnv, this: J
 pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onEnable(env: JNIEnv, this: JObject) {
     let api = get_api(&env, &this);
 
-    let bukkit = BukkitImpl { env: &env };
-    if let Err(e) = api.onenable(bukkit) {
+    let bukkit = Bukkit { env: &env };
+    if let Err(e) = api.onenable(&bukkit) {
         eprintln!("error in onenable: {e}");
     }
 }
@@ -100,8 +100,8 @@ pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onEnable(env: JNIEnv, this:
 pub extern "C" fn Java_me_danny_nativeplug_JNIPlugin_onDisable(env: JNIEnv, this: JObject) {
     let api = get_api(&env, &this);
 
-    let bukkit = BukkitImpl { env: &env };
-    if let Err(e) = api.ondisable(bukkit) {
+    let bukkit = Bukkit { env: &env };
+    if let Err(e) = api.ondisable(&bukkit) {
         eprintln!("error in ondisable: {e}");
     }
 }

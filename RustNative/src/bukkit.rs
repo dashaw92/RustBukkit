@@ -1,21 +1,22 @@
 use jni::{objects::JValue, JNIEnv};
 
-pub trait Bukkit {
-    fn broadcast_message(&self, message: &str) -> i32;
-}
-
-pub(crate) struct BukkitImpl<'jvm, 'a> {
+pub struct Bukkit<'jvm, 'a> {
     pub(crate) env: &'jvm JNIEnv<'a>,
 }
 
-impl<'jvm, 'a> Bukkit for BukkitImpl<'jvm, 'a> {
-    fn broadcast_message(&self, message: &str) -> i32 {
-        let jstring = self.env.new_string(message).unwrap();
+#[allow(dead_code)]
+impl<'jvm, 'a> Bukkit<'jvm, 'a> {
+    pub fn broadcast_message(&self, message: &str) -> i32 {
+        let Ok(jstring) = self.env.new_string(message) else {
+            eprintln!("Failed to get a string object from Java!");
+            return -1;
+        };
+
         match self.env.call_static_method(
             "org/bukkit/Bukkit",
             "broadcastMessage",
             "(Ljava/lang/String;)I",
-            &[JValue::Object(*jstring)],
+            &[jstring.into()],
         ) {
             Ok(JValue::Int(playerCount)) => playerCount,
             Ok(what) => {
