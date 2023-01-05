@@ -11,9 +11,11 @@ import java.nio.file.Files;
 
 public final class RustLoader extends JavaPlugin {
 
-    @Override
-    @SuppressWarnings("all")
-    public void onLoad() {
+    private static boolean LOADED = false;
+
+    private void loadNative() {
+        if (LOADED) return;
+        
         var nativeLib = new File(getDataFolder(), "rustbukkit.dll");
         if(!nativeLib.exists()) {
             nativeLib.getParentFile().mkdirs();
@@ -23,6 +25,13 @@ public final class RustLoader extends JavaPlugin {
         }
 
         System.load(nativeLib.getAbsolutePath());
+        LOADED = true;
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public void onLoad() {
+        loadNative();
         Bukkit.getPluginManager().registerInterface(RustPluginLoader.class);
         try {
             Files.list(getDataFolder().getParentFile().toPath())

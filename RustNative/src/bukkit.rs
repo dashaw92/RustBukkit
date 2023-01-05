@@ -4,7 +4,7 @@ pub trait Bukkit {
     fn broadcast_message(&self, message: &str) -> i32;
 }
 
-pub struct BukkitImpl<'jvm, 'a> {
+pub(crate) struct BukkitImpl<'jvm, 'a> {
     pub(crate) env: &'jvm JNIEnv<'a>,
 }
 
