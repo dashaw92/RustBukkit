@@ -24,7 +24,15 @@ public final class RustLoader extends JavaPlugin {
             return;
         }
 
-        System.load(nativeLib.getAbsolutePath());
+        try {
+            Runtime.getRuntime().load(nativeLib.getAbsolutePath());
+        } catch(UnsatisfiedLinkError ex) {
+            if (!ex.getMessage().contains("already loaded")) {
+                //hacky, I know, but this class of Exception is thrown for multiple reasons,
+                //the library being loaded already included.
+                ex.printStackTrace();
+            }
+        }
         LOADED = true;
     }
 
