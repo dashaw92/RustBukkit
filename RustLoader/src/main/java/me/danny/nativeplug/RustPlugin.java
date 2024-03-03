@@ -21,14 +21,14 @@ public class RustPlugin implements Plugin {
 
     private boolean enabled = false;
     private final File lib;
-    protected final JNIPlugin jniplugin;
     private final PluginLoader loader;
+    private final NativePlugin plugin;
 
 
-    public RustPlugin(File lib, RustPluginLoader loader, long handle) {
+    public RustPlugin(File lib, RustPluginLoader loader, NativePlugin plugin) {
         this.lib = lib;
-        this.jniplugin = new JNIPlugin(handle, this);
         this.loader = loader;
+        this.plugin = plugin;
 
         onLoad();
     }
@@ -98,23 +98,22 @@ public class RustPlugin implements Plugin {
     public void onDisable() {
         if (enabled) {
             Bukkit.getLogger().info("Disabling '%s'...".formatted(getName()));
-            jniplugin.onDisable();
+            plugin.onDisable();
             enabled = false;
             Bukkit.getLogger().info("'%s' has been disabled.".formatted(getName()));
-            jniplugin.close();
         }
     }
 
     @Override
     public void onLoad() {
-        jniplugin.onLoad();
+        plugin.onLoad();
     }
 
     @Override
     public void onEnable() {
         if (!enabled) {
             Bukkit.getLogger().info("Enabling '%s'...".formatted(getName()));
-            jniplugin.onEnable();
+            plugin.onEnable();
             enabled = true;
             Bukkit.getLogger().info("'%s' has been enabled.".formatted(getName()));
         }

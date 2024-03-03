@@ -4,7 +4,7 @@ plugins {
 
 group = "me.danny"
 version = "0.0.1-SNAPSHOT"
-val spigotVersion = "1.19.2-R0.1-SNAPSHOT"
+val spigotVersion = "1.20.4-R0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -16,6 +16,10 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_18
-    targetCompatibility = JavaVersion.VERSION_18
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile::class.java).forEach {
+    it.options.compilerArgs.add("--enable-preview")
 }
