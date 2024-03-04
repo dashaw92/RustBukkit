@@ -3,15 +3,10 @@ package me.danny.nativeplug;
 import org.bukkit.Bukkit;
 
 import java.io.File;
-import java.lang.foreign.Arena;
-import java.lang.foreign.FunctionDescriptor;
-import java.lang.foreign.Linker;
-import java.lang.foreign.SymbolLookup;
+import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class ForeignLoad {
 
@@ -28,7 +23,7 @@ public final class ForeignLoad {
     static void close() {
         PLUGINS.values().forEach(plug -> {
             var bukkitPlug = Bukkit.getPluginManager().getPlugin(plug.path());
-            if(bukkitPlug != null) {
+            if (bukkitPlug != null) {
                 Bukkit.getPluginManager().disablePlugin(bukkitPlug);
             }
 

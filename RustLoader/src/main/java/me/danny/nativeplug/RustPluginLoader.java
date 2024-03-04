@@ -6,20 +6,21 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class RustPluginLoader implements PluginLoader {
 
-    public RustPluginLoader(Server server) {}
+    private static final Pattern[] EXTENSIONS = new Pattern[]{Pattern.compile("\\.dll$")};
+
+    public RustPluginLoader(Server server) {
+    }
 
     @Override
     public Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException {
-        if(!file.exists()) {
+        if (!file.exists()) {
             throw new InvalidPluginException(new FileNotFoundException(STR."\{file.getPath()} does not exist"));
         }
 
@@ -42,7 +43,6 @@ public final class RustPluginLoader implements PluginLoader {
                 """.formatted(file.getName())));
     }
 
-    private static final Pattern[] EXTENSIONS = new Pattern[] { Pattern.compile("\\.dll$") };
     @Override
     public Pattern[] getPluginFileFilters() {
         return EXTENSIONS.clone();

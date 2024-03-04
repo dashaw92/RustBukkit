@@ -7,22 +7,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
+import org.bukkit.plugin.*;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class RustPlugin implements Plugin {
 
-    private boolean enabled = false;
     private final File lib;
     private final PluginLoader loader;
     private final NativePlugin plugin;
+    private boolean enabled = false;
 
 
     public RustPlugin(File lib, RustPluginLoader loader, NativePlugin plugin) {
@@ -47,7 +43,7 @@ public class RustPlugin implements Plugin {
                     version: unknown
                     author: unknown
                     """.formatted(getName())));
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             return new PluginDescriptionFile(getName(), "unknown", "rust");
         }
