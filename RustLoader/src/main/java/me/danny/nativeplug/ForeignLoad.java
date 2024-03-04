@@ -18,6 +18,10 @@ public final class ForeignLoad {
     private static final FunctionDescriptor ON_ENABLE_DESC = FunctionDescriptor.ofVoid();
     private static final FunctionDescriptor ON_DISABLE_DESC = FunctionDescriptor.ofVoid();
 
+    private static final MethodHandle DUMMY_ON_LOAD = MethodHandles.empty(ON_LOAD_DESC.toMethodType());
+    private static final MethodHandle DUMMY_ON_ENABLE = MethodHandles.empty(ON_ENABLE_DESC.toMethodType());
+    private static final MethodHandle DUMMY_ON_DISABLE = MethodHandles.empty(ON_DISABLE_DESC.toMethodType());
+
     static {
         PLUGIN_ARENA = Arena.ofShared();
     }
@@ -31,9 +35,9 @@ public final class ForeignLoad {
         Linker linker = Linker.nativeLinker();
         SymbolLookup lib = SymbolLookup.libraryLookup(file.toPath(), PLUGIN_ARENA);
 
-        var onLoad = get(linker, lib, "on_load", ON_LOAD_DESC).orElse(DUMMY_HANDLE);
-        var onEnable = get(linker, lib, "on_enable", ON_ENABLE_DESC).orElse(DUMMY_HANDLE);
-        var onDisable = get(linker, lib, "on_disable", ON_DISABLE_DESC).orElse(DUMMY_HANDLE);
+        var onLoad = get(linker, lib, "on_load", ON_LOAD_DESC).orElse(DUMMY_ON_LOAD);
+        var onEnable = get(linker, lib, "on_enable", ON_ENABLE_DESC).orElse(DUMMY_ON_ENABLE);
+        var onDisable = get(linker, lib, "on_disable", ON_DISABLE_DESC).orElse(DUMMY_ON_DISABLE);
         return new NativePlugin(file.getName(), PLUGIN_ARENA, onLoad, onEnable, onDisable);
     }
 
@@ -41,5 +45,4 @@ public final class ForeignLoad {
         return lib.find(name).map(segment -> linker.downcallHandle(segment, desc));
     }
 
-    private static final MethodHandle DUMMY_HANDLE = MethodHandles.empty(MethodType.methodType(void.class));
 }
