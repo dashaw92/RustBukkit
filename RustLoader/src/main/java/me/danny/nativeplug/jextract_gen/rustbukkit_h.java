@@ -2,15 +2,13 @@
 
 package me.danny.nativeplug.jextract_gen;
 
-import java.lang.invoke.*;
 import java.lang.foreign.*;
-import java.nio.ByteOrder;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static java.lang.foreign.ValueLayout.*;
-import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 public class rustbukkit_h {
 
@@ -12698,7 +12696,7 @@ public class rustbukkit_h {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const char *msg)
+     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
      * }
      */
     public static FunctionDescriptor broadcast_message$descriptor() {
@@ -12708,7 +12706,7 @@ public class rustbukkit_h {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const char *msg)
+     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
      * }
      */
     public static MethodHandle broadcast_message$handle() {
@@ -12716,7 +12714,7 @@ public class rustbukkit_h {
     }
     /**
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const char *msg)
+     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
      * }
      */
     public static int broadcast_message(MemorySegment self, MemorySegment msg) {
@@ -13206,7 +13204,7 @@ public class rustbukkit_h {
     public static MemorySegment __FILEW__() {
         class Holder {
             static final MemorySegment __FILEW__
-                = rustbukkit_h.LIBRARY_ARENA.allocateFrom("C");
+                = rustbukkit_h.LIBRARY_ARENA.allocateUtf8String("C");
         }
         return Holder.__FILEW__;
     }

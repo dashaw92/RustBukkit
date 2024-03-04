@@ -15,7 +15,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 /**
  * {@snippet lang=c :
  * struct RustBukkit {
- *     int32_t (*broadcast_message_hnd)(const char *);
+ *     int32_t (*broadcast_message_hnd)(const uint8_t *);
  * }
  * }
  */
@@ -38,7 +38,7 @@ public class RustBukkit {
 
     /**
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static class broadcast_message_hnd {
@@ -95,7 +95,7 @@ public class RustBukkit {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static final AddressLayout broadcast_message_hnd$layout() {
@@ -107,7 +107,7 @@ public class RustBukkit {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static final long broadcast_message_hnd$offset() {
@@ -117,7 +117,7 @@ public class RustBukkit {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static MemorySegment broadcast_message_hnd(MemorySegment struct) {
@@ -127,7 +127,7 @@ public class RustBukkit {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static void broadcast_message_hnd(MemorySegment struct, MemorySegment fieldValue) {

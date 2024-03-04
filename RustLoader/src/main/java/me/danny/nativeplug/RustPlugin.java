@@ -1,5 +1,7 @@
 package me.danny.nativeplug;
 
+import me.danny.nativeplug.jextract_gen.RustBukkit;
+import me.danny.nativeplug.nativeapi.RustBukkitGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -10,6 +12,7 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.*;
 
 import java.io.*;
+import java.lang.foreign.MemorySegment;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,12 +23,15 @@ public class RustPlugin implements Plugin {
     private final NativePlugin plugin;
     private boolean enabled = false;
 
+    private final MemorySegment bukkitImpl;
+
 
     public RustPlugin(File lib, RustPluginLoader loader, NativePlugin plugin) {
         this.lib = lib;
         this.loader = loader;
         this.plugin = plugin;
 
+        bukkitImpl = RustBukkitGenerator.generate(plugin.arena());
         onLoad();
     }
 
@@ -94,7 +100,7 @@ public class RustPlugin implements Plugin {
     public void onDisable() {
         if (enabled) {
             Bukkit.getLogger().info("Disabling '%s'...".formatted(getName()));
-            plugin.onDisable();
+            plugin.onDisable(bukkitImpl);
             enabled = false;
             Bukkit.getLogger().info("'%s' has been disabled.".formatted(getName()));
         }
@@ -102,14 +108,14 @@ public class RustPlugin implements Plugin {
 
     @Override
     public void onLoad() {
-        plugin.onLoad();
+        plugin.onLoad(bukkitImpl);
     }
 
     @Override
     public void onEnable() {
         if (!enabled) {
             Bukkit.getLogger().info("Enabling '%s'...".formatted(getName()));
-            plugin.onEnable();
+            plugin.onEnable(bukkitImpl);
             enabled = true;
             Bukkit.getLogger().info("'%s' has been enabled.".formatted(getName()));
         }

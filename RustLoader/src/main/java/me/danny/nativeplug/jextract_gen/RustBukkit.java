@@ -2,20 +2,16 @@
 
 package me.danny.nativeplug.jextract_gen;
 
-import java.lang.invoke.*;
 import java.lang.foreign.*;
-import java.nio.ByteOrder;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.lang.invoke.MethodHandle;
+import java.util.function.Consumer;
 
-import static java.lang.foreign.ValueLayout.*;
-import static java.lang.foreign.MemoryLayout.PathElement.*;
+import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
 
 /**
  * {@snippet lang=c :
  * struct RustBukkit {
- *     int32_t (*broadcast_message_hnd)(const char *);
+ *     int32_t (*broadcast_message_hnd)(const uint8_t *);
  * }
  * }
  */
@@ -38,7 +34,7 @@ public class RustBukkit {
 
     /**
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static class broadcast_message_hnd {
@@ -95,7 +91,7 @@ public class RustBukkit {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static final AddressLayout broadcast_message_hnd$layout() {
@@ -107,7 +103,7 @@ public class RustBukkit {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static final long broadcast_message_hnd$offset() {
@@ -117,7 +113,7 @@ public class RustBukkit {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static MemorySegment broadcast_message_hnd(MemorySegment struct) {
@@ -127,7 +123,7 @@ public class RustBukkit {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * int32_t (*broadcast_message_hnd)(const char *)
+     * int32_t (*broadcast_message_hnd)(const uint8_t *)
      * }
      */
     public static void broadcast_message_hnd(MemorySegment struct, MemorySegment fieldValue) {

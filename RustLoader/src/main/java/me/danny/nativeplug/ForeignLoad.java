@@ -1,5 +1,6 @@
 package me.danny.nativeplug;
 
+import me.danny.nativeplug.jextract_gen.RustBukkit;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -12,9 +13,9 @@ public final class ForeignLoad {
 
     private static final Map<String, NativePlugin> PLUGINS = new HashMap<>();
 
-    private static final FunctionDescriptor ON_LOAD_DESC = FunctionDescriptor.ofVoid();
-    private static final FunctionDescriptor ON_ENABLE_DESC = FunctionDescriptor.ofVoid();
-    private static final FunctionDescriptor ON_DISABLE_DESC = FunctionDescriptor.ofVoid();
+    private static final FunctionDescriptor ON_LOAD_DESC = FunctionDescriptor.ofVoid(RustBukkit.layout());
+    private static final FunctionDescriptor ON_ENABLE_DESC = FunctionDescriptor.ofVoid(RustBukkit.layout());
+    private static final FunctionDescriptor ON_DISABLE_DESC = FunctionDescriptor.ofVoid(RustBukkit.layout());
 
     private static final MethodHandle DUMMY_ON_LOAD = MethodHandles.empty(ON_LOAD_DESC.toMethodType());
     private static final MethodHandle DUMMY_ON_ENABLE = MethodHandles.empty(ON_ENABLE_DESC.toMethodType());

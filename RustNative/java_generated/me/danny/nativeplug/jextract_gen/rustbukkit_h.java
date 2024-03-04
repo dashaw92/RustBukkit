@@ -12698,7 +12698,7 @@ public class rustbukkit_h {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const char *msg)
+     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
      * }
      */
     public static FunctionDescriptor broadcast_message$descriptor() {
@@ -12708,7 +12708,7 @@ public class rustbukkit_h {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const char *msg)
+     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
      * }
      */
     public static MethodHandle broadcast_message$handle() {
@@ -12716,7 +12716,7 @@ public class rustbukkit_h {
     }
     /**
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const char *msg)
+     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
      * }
      */
     public static int broadcast_message(MemorySegment self, MemorySegment msg) {

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 typedef struct RustBukkit {
-  int32_t (*broadcast_message_hnd)(const char*);
+  int32_t (*broadcast_message_hnd)(const uint8_t*);
 } RustBukkit;
 
-int32_t broadcast_message(const struct RustBukkit *self, const char *msg);
+int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg);
