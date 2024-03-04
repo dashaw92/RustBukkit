@@ -9,5 +9,3 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-jni = "0.20.0"
-libloading = "0.7.4"
