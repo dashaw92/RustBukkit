@@ -8,7 +8,6 @@ import java.lang.foreign.SymbolLookup;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.TypeDescriptor;
 import java.util.Optional;
 
 public final class ForeignLoad {
@@ -42,20 +41,5 @@ public final class ForeignLoad {
         return lib.find(name).map(segment -> linker.downcallHandle(segment, desc));
     }
 
-    private static void dummyFuncImpl() {
-        System.out.println("Dummy function called.");
-    }
-
-    private static final MethodHandle DUMMY_HANDLE = genDummyFunc();
-    private static MethodHandle genDummyFunc() {
-        MethodType dummyFuncType = MethodType.methodType(void.class);
-        var lookup = MethodHandles.lookup();
-
-        try {
-            return lookup.findStatic(ForeignLoad.class, "dummyFuncImpl", dummyFuncType);
-        } catch(Throwable ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
+    private static final MethodHandle DUMMY_HANDLE = MethodHandles.empty(MethodType.methodType(void.class));
 }
