@@ -10,19 +10,31 @@ public final class RustBukkitGenerator {
     public static MemorySegment generate(Arena arena) {
         MemorySegment rbukkit = RustBukkit.allocate(arena);
 
-        //Uhhhhh
-//        rbukkit.set(RustBukkit.broadcast_message_hnd$layout(), );
+        rbukkit.set(RustBukkit.broadcast_message_hnd$layout(), 0, getBroadcastMessage(arena));
         return rbukkit;
     }
 
-    private static MethodHandle getBroadcastMessage() {
-        MethodType type = MethodType.methodType(int.class, String.class);
-        MethodHandles.Lookup l = MethodHandles.publicLookup();
+    private static int proxyBroadcast(MemorySegment ptr) {
+        String msg = "Uh oh D:";
         try {
-            return l.findStatic(Bukkit.class, "broadcastMessage", type);
+            msg = ptr.getUtf8String(0);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return Bukkit.broadcastMessage(msg);
+    }
+
+    private static MemorySegment getBroadcastMessage(Arena arena) {
+        var type = FunctionDescriptor.of(ValueLayout.JAVA_INT, AddressLayout.ADDRESS.withTargetLayout(ValueLayout.JAVA_BYTE));
+        MethodHandle handle;
+        try {
+            handle = MethodHandles.lookup()
+                    .findStatic(RustBukkitGenerator.class, "proxyBroadcast", type.toMethodType());
         } catch(Exception ex) {
             ex.printStackTrace();
-            return MethodHandles.empty(type);
+            handle = MethodHandles.empty(type.toMethodType());
         }
+
+        return Linker.nativeLinker().upcallStub(handle, type, arena);
     }
 }

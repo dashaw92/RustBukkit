@@ -12698,7 +12698,7 @@ public class rustbukkit_h {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
+     * int32_t broadcast_message(const struct RustBukkit *bukkit, const uint8_t *msg)
      * }
      */
     public static FunctionDescriptor broadcast_message$descriptor() {
@@ -12708,7 +12708,7 @@ public class rustbukkit_h {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
+     * int32_t broadcast_message(const struct RustBukkit *bukkit, const uint8_t *msg)
      * }
      */
     public static MethodHandle broadcast_message$handle() {
@@ -12716,16 +12716,16 @@ public class rustbukkit_h {
     }
     /**
      * {@snippet lang=c :
-     * int32_t broadcast_message(const struct RustBukkit *self, const uint8_t *msg)
+     * int32_t broadcast_message(const struct RustBukkit *bukkit, const uint8_t *msg)
      * }
      */
-    public static int broadcast_message(MemorySegment self, MemorySegment msg) {
+    public static int broadcast_message(MemorySegment bukkit, MemorySegment msg) {
         var mh$ = broadcast_message.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
-                traceDowncall("broadcast_message", self, msg);
+                traceDowncall("broadcast_message", bukkit, msg);
             }
-            return (int)mh$.invokeExact(self, msg);
+            return (int)mh$.invokeExact(bukkit, msg);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }

@@ -1,4 +1,4 @@
-use rustbukkit::RustBukkit;
+use rustbukkit::{RustBukkit, broadcast_message};
 
 #[no_mangle]
 pub extern "C" fn on_load(_: &RustBukkit) {
@@ -8,7 +8,7 @@ pub extern "C" fn on_load(_: &RustBukkit) {
 #[no_mangle]
 pub extern "C" fn on_enable(bukkit: &RustBukkit) {
     println!("Test plugin enabled!");
-    bukkit.broadcast_message("hello!".as_ptr());
+    broadcast_message(bukkit, "hello!");
 }
 
 #[no_mangle]
