@@ -9,7 +9,7 @@ public record NativePlugin(String path, Arena arena, MethodHandle onLoadHnd, Met
 
     private static void invoke(MethodHandle handle, MemorySegment bukkitImpl) {
         try {
-            handle.invoke(bukkitImpl);
+            handle.invokeExact(bukkitImpl);
         } catch (Throwable ex) {
             ex.printStackTrace();
         }

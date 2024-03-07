@@ -1,6 +1,7 @@
 #[repr(C)]
+#[derive(Debug)]
 pub struct RustBukkit {
-    broadcast_message_hnd: fn(*const u8) -> i32,
+    broadcast_message_hnd: extern "C" fn(*const u8) -> i32,
 }
 
 #[no_mangle]

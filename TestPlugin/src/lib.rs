@@ -1,17 +1,18 @@
 use rustbukkit::{RustBukkit, broadcast_message};
 
 #[no_mangle]
-pub extern "C" fn on_load(_: &RustBukkit) {
-    println!("Test plugin loaded!");
+pub extern "C" fn on_load(bukkit: RustBukkit) {
+    println!("Test plugin loaded! {bukkit:?}");
 }
 
 #[no_mangle]
-pub extern "C" fn on_enable(bukkit: &RustBukkit) {
+pub extern "C" fn on_enable(bukkit: RustBukkit) {
     println!("Test plugin enabled!");
-    broadcast_message(bukkit, "hello!");
+    let playercount = broadcast_message(&bukkit, "hello!");
+    println!("Broadcast reached {playercount} players.");
 }
 
 #[no_mangle]
-pub extern "C" fn on_disable(_: &RustBukkit) {
+pub extern "C" fn on_disable(_: RustBukkit) {
     println!("Test plugin disabled!");
 }
